@@ -1,4 +1,4 @@
-package com.project.anesu.ecommerce.ordermanagementservice.entity;
+package com.project.anesu.ecommerce.ordermanagementservice.entity.order;
 
 public enum OrderStatus {
     PENDING,

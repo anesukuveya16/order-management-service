@@ -1,6 +1,5 @@
-package com.project.anesu.ecommerce.ordermanagementservice.controller;
+package com.project.anesu.ecommerce.ordermanagementservice.entity.order;
 
-import com.project.anesu.ecommerce.ordermanagementservice.entity.OrderStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,4 +13,5 @@ public class Order {
     private Long id;
     private String customerId;
     private OrderStatus orderStatus;
+    private OrderItem orderItem;
 }

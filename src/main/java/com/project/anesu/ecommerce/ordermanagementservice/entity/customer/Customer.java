@@ -1,4 +1,4 @@
-package com.project.anesu.ecommerce.ordermanagementservice.entity;
+package com.project.anesu.ecommerce.ordermanagementservice.entity.customer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
