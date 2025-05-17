@@ -12,12 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long productId;
-    private int quantity;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    private Order order;
+  private Long productId;
+  private int quantity;
+
+  @ManyToOne private Order order;
 }
