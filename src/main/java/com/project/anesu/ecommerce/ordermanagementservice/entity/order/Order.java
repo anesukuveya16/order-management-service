@@ -13,16 +13,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "customer_order")
 public class Order {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String customerId;
+  private Long customerId;
   private double totalPrice;
+
+  @Enumerated(EnumType.STRING)
   private OrderStatus orderStatus;
+
   private LocalDateTime orderDate;
   private String cancellationReason;
-  private @OneToMany List<OrderItem> orderItem;
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<OrderItem> orderItem;
+
 }

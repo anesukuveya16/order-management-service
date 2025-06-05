@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -24,4 +26,5 @@ public class Customer {
   private String lastName;
   private String email;
   private String phoneNumber;
+  private Date birthDate;
 }
