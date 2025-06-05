@@ -1,9 +1,9 @@
 package com.project.anesu.ecommerce.ordermanagementservice.model;
 
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.Order;
+import com.project.anesu.ecommerce.ordermanagementservice.entity.order.OrderItem;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.OrderStatus;
 import com.project.anesu.ecommerce.ordermanagementservice.service.exception.OrderNotFoundException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +20,9 @@ public interface OrderService {
    * @param order the {@link Order} entity to be created
    * @return the created {@link Order} object
    */
-  Order createOrder(Order order);
-
-
-
+  Order createOrder(Order order, List<OrderItem> orderItems);
 
   Order processPendingOrder(Long orderId, OrderStatus status) throws OrderNotFoundException;
-
 
   Order markOrderAsDelivered(Long orderId, OrderStatus status) throws OrderNotFoundException;
 
@@ -53,7 +49,7 @@ public interface OrderService {
    * @param updatedOrder the {@link Order} entity containing updated information
    * @return the updated {@link Order} object
    */
-  Order updateOrder(Long orderId, Order updatedOrder);
+  Order updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException;
 
   /**
    * Cancels an existing order by its ID.

@@ -1,6 +1,8 @@
 package com.project.anesu.ecommerce.ordermanagementservice.model;
 
 import com.project.anesu.ecommerce.ordermanagementservice.entity.customer.Customer;
+import com.project.anesu.ecommerce.ordermanagementservice.service.exception.CustomerNotFoundException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,7 @@ public interface CustomerService {
    * @param updatedCustomer the customer entity containing updated information
    * @return the updated {@link Customer} object
    */
-  Customer updateCustomer(Long customerId, Customer updatedCustomer);
+  Customer updateCustomer(Long customerId, Customer updatedCustomer) throws CustomerNotFoundException;
 
   /**
    * Retrieves a customer by their ID.
