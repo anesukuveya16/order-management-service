@@ -3,17 +3,20 @@ package com.project.anesu.ecommerce.ordermanagementservice.service.util;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.Order;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.OrderItem;
 import com.project.anesu.ecommerce.ordermanagementservice.service.exception.InvalidOrderException;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderValidation {
+public class OrderValidator {
 
-  public void validateOrder(Order order, OrderItem orderItem) {
+  public void validateNewOrder(Order order, List<OrderItem> orderItems) {
     validateNewlyCreatedOrder(order);
-    validateOrderItem(orderItem);
+    for (OrderItem item : orderItems) {
+      validateOrderItem(item);
+    }
   }
 
-  private void validateNewlyCreatedOrder(Order order)  {
+  private void validateNewlyCreatedOrder(Order order)  throws InvalidOrderException {
     if (order == null) {
       throw new InvalidOrderException("Order cannot be null.");
     }
@@ -27,9 +30,7 @@ public class OrderValidation {
     }
   }
 
-
-
-  private void validateOrderItem(OrderItem orderItem)  {
+  private void validateOrderItem(OrderItem orderItem) {
     if (orderItem == null) {
       throw new InvalidOrderException("Quantity must be greater than 0.");
     }
