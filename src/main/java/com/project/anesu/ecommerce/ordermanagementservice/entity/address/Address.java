@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @Entity
@@ -16,21 +15,21 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Address {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String streetName;
-    private String streetNumber;
-    private String city;
-    private String state;
-    private String zipCode;
+  private String streetName;
+  private String streetNumber;
+  private String city;
+  private String state;
+  private String zipCode;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+  @ManyToOne
+  @JoinColumn(name = "customer_id")
+  private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+  @ManyToOne
+  @JoinColumn(name = "order_id")
+  private Order order;
 }
