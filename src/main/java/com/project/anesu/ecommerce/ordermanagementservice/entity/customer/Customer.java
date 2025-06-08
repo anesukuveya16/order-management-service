@@ -1,15 +1,14 @@
 package com.project.anesu.ecommerce.ordermanagementservice.entity.customer;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.project.anesu.ecommerce.ordermanagementservice.entity.address.Address;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Entity
 @Getter
@@ -27,4 +26,7 @@ public class Customer {
   private String email;
   private String phoneNumber;
   private Date birthDate;
+
+  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Address> savedAddresses = new ArrayList<>();
 }

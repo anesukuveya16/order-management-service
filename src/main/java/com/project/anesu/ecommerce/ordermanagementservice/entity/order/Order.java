@@ -1,5 +1,6 @@
 package com.project.anesu.ecommerce.ordermanagementservice.entity.order;
 
+import com.project.anesu.ecommerce.ordermanagementservice.entity.address.Address;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +29,11 @@ public class Order {
 
   private LocalDateTime orderDate;
   private String cancellationReason;
+
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<OrderItem> orderItem;
 
+  @OneToMany
+  @JoinColumn(name = "order_id")
+  private List<Address> deliveryAddress;
 }
