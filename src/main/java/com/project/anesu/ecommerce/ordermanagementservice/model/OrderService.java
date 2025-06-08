@@ -1,5 +1,6 @@
 package com.project.anesu.ecommerce.ordermanagementservice.model;
 
+import com.project.anesu.ecommerce.ordermanagementservice.entity.address.Address;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.Order;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.OrderItem;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.OrderStatus;
@@ -30,10 +31,9 @@ public interface OrderService {
    * Retrieves an order by its ID and associated customer ID.
    *
    * @param orderId the ID of the order to retrieve
-   * @param customerId the ID of the customer who placed the order
    * @return an {@link Optional} containing the order if found, or empty if not
    */
-  Optional<Order> getOrderByCustomerId(Long orderId, Long customerId);
+  Order getOrderById(Long orderId);
 
   /**
    * Retrieves all orders.
@@ -49,7 +49,8 @@ public interface OrderService {
    * @param updatedOrder the {@link Order} entity containing updated information
    * @return the updated {@link Order} object
    */
-  Order updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException;
+  Order updateDeliveryAddress(Long orderId, Long addressId, Address updatedOrder)
+      throws OrderNotFoundException;
 
   /**
    * Cancels an existing order by its ID.

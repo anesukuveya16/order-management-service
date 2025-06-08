@@ -1,8 +1,8 @@
 package com.project.anesu.ecommerce.ordermanagementservice.model;
 
+import com.project.anesu.ecommerce.ordermanagementservice.entity.address.Address;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.customer.Customer;
 import com.project.anesu.ecommerce.ordermanagementservice.service.exception.CustomerNotFoundException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +29,8 @@ public interface CustomerService {
    * @param updatedCustomer the customer entity containing updated information
    * @return the updated {@link Customer} object
    */
-  Customer updateCustomer(Long customerId, Customer updatedCustomer) throws CustomerNotFoundException;
+  Customer updateCustomer(Long customerId, Customer updatedCustomer)
+      throws CustomerNotFoundException;
 
   /**
    * Retrieves a customer by their ID.
@@ -37,7 +38,7 @@ public interface CustomerService {
    * @param customerId the ID of the customer to retrieve
    * @return an {@link Optional} containing the customer if found, or empty if not
    */
-  Optional<Customer> getCustomerById(Long customerId);
+  Customer getCustomerById(Long customerId);
 
   /**
    * Retrieves a list of all customers.
@@ -52,4 +53,13 @@ public interface CustomerService {
    * @param customerId the ID of the customer to delete
    */
   void deleteCustomer(Long customerId);
+
+  Customer linkDeliveryAddressToCustomer(Long customerId, Address address)
+      throws CustomerNotFoundException;
+
+  Customer updateDeliveryAddressToCustomer(Long customerId, Long addressId, Address updatedAddress)
+      throws CustomerNotFoundException;
+
+  Customer deleteDeliveryAddressFromCustomer(Long customerId, Long addressId, Address address)
+      throws CustomerNotFoundException;
 }
