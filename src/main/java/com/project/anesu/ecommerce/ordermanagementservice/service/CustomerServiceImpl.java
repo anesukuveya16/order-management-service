@@ -1,13 +1,13 @@
 package com.project.anesu.ecommerce.ordermanagementservice.service;
 
+import com.project.anesu.ecommerce.ordermanagementservice.entity.address.Address;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.customer.Customer;
 import com.project.anesu.ecommerce.ordermanagementservice.model.CustomerService;
 import com.project.anesu.ecommerce.ordermanagementservice.model.repository.CustomerRepository;
+import com.project.anesu.ecommerce.ordermanagementservice.service.exception.AddressNotFoundException;
 import com.project.anesu.ecommerce.ordermanagementservice.service.exception.CustomerNotFoundException;
-import java.util.List;
-import java.util.Optional;
-
 import com.project.anesu.ecommerce.ordermanagementservice.service.util.CustomerValidator;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,23 +28,24 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public Customer updateCustomer(Long customerId, Customer updatedCustomer) throws CustomerNotFoundException {
+  public Customer updateCustomer(Long customerId, Customer updatedCustomer)
+      throws CustomerNotFoundException {
 
-    Customer existingCustomer = customerRepository.findById(customerId)
-            .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND_MESSAGE));
+    Customer existingCustomer = getCustomerById(customerId);
 
-    existingCustomer.setEmail(updatedCustomer.getEmail());
-    existingCustomer.setFirstName(updatedCustomer.getFirstName());
-    existingCustomer.setLastName(updatedCustomer.getLastName());
-    existingCustomer.setBirthDate(updatedCustomer.getBirthDate());
-    existingCustomer.setPhoneNumber(updatedCustomer.getPhoneNumber());
+    Customer updatedExistingCustomer = updateExistingCustomer(updatedCustomer, existingCustomer);
 
-    return customerRepository.save(existingCustomer);
+    customerValidator.validate(updatedExistingCustomer);
+
+    return customerRepository.save(updatedExistingCustomer);
   }
 
   @Override
-  public Optional<Customer> getCustomerById(Long customerId) {
-    return customerRepository.findById(customerId);
+  public Customer getCustomerById(Long customerId) throws CustomerNotFoundException {
+
+    return customerRepository
+        .findById(customerId)
+        .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND_MESSAGE + customerId));
   }
 
   @Override
@@ -60,4 +61,71 @@ public class CustomerServiceImpl implements CustomerService {
     customerRepository.deleteById(customerId);
   }
 
+  @Override
+  public Customer linkDeliveryAddressToCustomer(Long customerId, Address address)
+      throws CustomerNotFoundException {
+
+    Customer customerAddress = getCustomerById(customerId);
+
+    address.setCustomer(customerAddress);
+    customerAddress.getSavedAddresses().add(address);
+
+    return customerRepository.save(customerAddress);
+  }
+
+  @Override
+  public Customer updateDeliveryAddressToCustomer(
+      Long customerId, Long addressId, Address updatedAddress) throws CustomerNotFoundException {
+
+    Customer customer = getCustomerById(customerId);
+    List<Address> savedAddresses = customer.getSavedAddresses();
+
+    for (Address existingAddressToUpdate : savedAddresses) {
+
+      if (existingAddressToUpdate.getId().equals(addressId)) {
+        existingAddressToUpdate.setStreetName(updatedAddress.getStreetName());
+        existingAddressToUpdate.setStreetNumber(updatedAddress.getStreetNumber());
+        existingAddressToUpdate.setCity(updatedAddress.getCity());
+        existingAddressToUpdate.setState(updatedAddress.getState());
+        existingAddressToUpdate.setZipCode(updatedAddress.getZipCode());
+
+        break;
+      }
+    }
+
+    return customerRepository.save(customer);
+  }
+
+  @Override
+  public Customer deleteDeliveryAddressFromCustomer(
+      Long customerId, Long addressId, Address address) throws CustomerNotFoundException {
+
+    Customer customer = getCustomerById(customerId);
+
+    Address addressToDelete = null;
+
+    for (Address existingAddressToDelete : customer.getSavedAddresses()) {
+      if (existingAddressToDelete.getId().equals(addressId)) {
+        addressToDelete = existingAddressToDelete;
+        break;
+      }
+    }
+
+    if (addressToDelete != null) {
+      customer.getSavedAddresses().remove(addressToDelete);
+    } else {
+      throw new AddressNotFoundException("Address ID " + addressId + " not found!");
+    }
+
+    return customerRepository.save(customer);
+  }
+
+  private Customer updateExistingCustomer(Customer updatedCustomer, Customer existingCustomer) {
+    existingCustomer.setFirstName(updatedCustomer.getFirstName());
+    existingCustomer.setLastName(updatedCustomer.getLastName());
+    existingCustomer.setEmail(updatedCustomer.getEmail());
+    existingCustomer.setBirthDate(updatedCustomer.getBirthDate());
+    existingCustomer.setPhoneNumber(updatedCustomer.getPhoneNumber());
+    return existingCustomer;
+  }
 }

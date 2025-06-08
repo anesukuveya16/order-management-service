@@ -1,5 +1,6 @@
 package com.project.anesu.ecommerce.ordermanagementservice.service;
 
+import com.project.anesu.ecommerce.ordermanagementservice.entity.address.Address;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.Order;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.OrderItem;
 import com.project.anesu.ecommerce.ordermanagementservice.entity.order.OrderStatus;
@@ -63,10 +64,10 @@ public class OrderServiceImpl implements OrderService {
     order.setOrderDate(LocalDateTime.now());
     order.setOrderStatus(OrderStatus.PROCESSING);
 
-   for (OrderItem orderItem : orderItems) {
-     orderItem.setOrder(order);
-   }
-   order.setOrderItem(orderItems);
+    for (OrderItem orderItem : orderItems) {
+      orderItem.setOrder(order);
+    }
+    order.setOrderItem(orderItems);
 
     return orderRepository.save(order);
   }
@@ -89,9 +90,10 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public Optional<Order> getOrderByCustomerId(Long orderId, Long customerId) {
+  public Order getOrderById(Long orderId) {
 
-    return orderRepository.findById(customerId);
+    return orderRepository.findById(orderId)
+            .orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND_EXCEPTION_MESSAGE + orderId));
   }
 
   public Order getOrderByIdAndStatus(Long orderId, OrderStatus status)
@@ -109,15 +111,23 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public Order updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException {
+  public Order updateDeliveryAddress(Long orderId, Long addressId, Address updatedOrderAddress)
+      throws OrderNotFoundException {
 
-    Order existingOrder = orderRepository.findById(orderId).
-            orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND_EXCEPTION_MESSAGE + orderId));
+    Order existingOrder = getOrderById(orderId);
 
-    existingOrder.setOrderDate(updatedOrder.getOrderDate());
-    existingOrder.setOrderItem(updatedOrder.getOrderItem());
-    existingOrder.setTotalPrice(updatedOrder.getTotalPrice());
-    existingOrder.setOrderStatus(updatedOrder.getOrderStatus());
+    List<Address> savedAddresses = existingOrder.getDeliveryAddress();
+    for (Address currentDeliveryAddress : savedAddresses) {
+      if (currentDeliveryAddress.getId().equals(addressId)) {
+        currentDeliveryAddress.setStreetName(updatedOrderAddress.getStreetName());
+        currentDeliveryAddress.setStreetNumber(updatedOrderAddress.getStreetNumber());
+        currentDeliveryAddress.setCity(updatedOrderAddress.getCity());
+        currentDeliveryAddress.setState(updatedOrderAddress.getState());
+        currentDeliveryAddress.setZipCode(updatedOrderAddress.getZipCode());
+
+        break;
+      }
+    }
 
     return orderRepository.save(existingOrder);
   }
@@ -125,10 +135,7 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public void cancelOrder(Long orderId, String cancellationReason) throws OrderNotFoundException {
 
-    Order orderRequest =
-        orderRepository
-            .findById(orderId)
-            .orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND_EXCEPTION_MESSAGE));
+    Order orderRequest = getOrderById(orderId);
 
     orderRequest.setOrderStatus(OrderStatus.CANCELLED);
     orderRequest.setCancellationReason(cancellationReason);
