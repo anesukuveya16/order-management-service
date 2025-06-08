@@ -16,7 +16,7 @@ public class OrderValidator {
     }
   }
 
-  private void validateNewlyCreatedOrder(Order order)  throws InvalidOrderException {
+  private void validateNewlyCreatedOrder(Order order) throws InvalidOrderException {
     if (order == null) {
       throw new InvalidOrderException("Order cannot be null.");
     }
