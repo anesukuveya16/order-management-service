@@ -92,8 +92,9 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public Order getOrderById(Long orderId) {
 
-    return orderRepository.findById(orderId)
-            .orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND_EXCEPTION_MESSAGE + orderId));
+    return orderRepository
+        .findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException(ORDER_NOT_FOUND_EXCEPTION_MESSAGE + orderId));
   }
 
   public Order getOrderByIdAndStatus(Long orderId, OrderStatus status)
@@ -114,22 +115,22 @@ public class OrderServiceImpl implements OrderService {
   public Order updateDeliveryAddress(Long orderId, Long addressId, Address updatedOrderAddress)
       throws OrderNotFoundException {
 
-    Order existingOrder = getOrderById(orderId);
+    Order order = getOrderById(orderId);
 
-    List<Address> savedAddresses = existingOrder.getDeliveryAddress();
-    for (Address currentDeliveryAddress : savedAddresses) {
-      if (currentDeliveryAddress.getId().equals(addressId)) {
-        currentDeliveryAddress.setStreetName(updatedOrderAddress.getStreetName());
-        currentDeliveryAddress.setStreetNumber(updatedOrderAddress.getStreetNumber());
-        currentDeliveryAddress.setCity(updatedOrderAddress.getCity());
-        currentDeliveryAddress.setState(updatedOrderAddress.getState());
-        currentDeliveryAddress.setZipCode(updatedOrderAddress.getZipCode());
+    List<Address> savedAddresses = order.getDeliveryAddress();
+    for (Address existingAddressToUpdate : savedAddresses) {
+      if (existingAddressToUpdate.getId().equals(addressId)) {
+        existingAddressToUpdate.setStreetName(updatedOrderAddress.getStreetName());
+        existingAddressToUpdate.setStreetNumber(updatedOrderAddress.getStreetNumber());
+        existingAddressToUpdate.setCity(updatedOrderAddress.getCity());
+        existingAddressToUpdate.setState(updatedOrderAddress.getState());
+        existingAddressToUpdate.setZipCode(updatedOrderAddress.getZipCode());
 
         break;
       }
     }
 
-    return orderRepository.save(existingOrder);
+    return orderRepository.save(order);
   }
 
   @Override

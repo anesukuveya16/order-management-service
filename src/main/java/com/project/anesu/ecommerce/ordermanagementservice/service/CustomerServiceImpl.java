@@ -78,16 +78,15 @@ public class CustomerServiceImpl implements CustomerService {
       Long customerId, Long addressId, Address updatedAddress) throws CustomerNotFoundException {
 
     Customer customer = getCustomerById(customerId);
+
     List<Address> savedAddresses = customer.getSavedAddresses();
-
-    for (Address existingAddressToUpdate : savedAddresses) {
-
-      if (existingAddressToUpdate.getId().equals(addressId)) {
-        existingAddressToUpdate.setStreetName(updatedAddress.getStreetName());
-        existingAddressToUpdate.setStreetNumber(updatedAddress.getStreetNumber());
-        existingAddressToUpdate.setCity(updatedAddress.getCity());
-        existingAddressToUpdate.setState(updatedAddress.getState());
-        existingAddressToUpdate.setZipCode(updatedAddress.getZipCode());
+    for (Address existingAddress : savedAddresses) {
+      if (existingAddress.getId().equals(addressId)) {
+        existingAddress.setStreetName(updatedAddress.getStreetName());
+        existingAddress.setStreetNumber(updatedAddress.getStreetNumber());
+        existingAddress.setState(updatedAddress.getState());
+        existingAddress.setZipCode(updatedAddress.getZipCode());
+        existingAddress.setCity(updatedAddress.getCity());
 
         break;
       }
