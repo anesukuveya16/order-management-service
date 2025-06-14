@@ -2,8 +2,8 @@ package com.project.anesu.ecommerce.ordermanagementservice.entity.customer;
 
 import com.project.anesu.ecommerce.ordermanagementservice.entity.address.Address;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class Customer {
   private String lastName;
   private String email;
   private String phoneNumber;
-  private Date birthDate;
+  private LocalDate birthDate;
 
   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Address> savedAddresses = new ArrayList<>();
