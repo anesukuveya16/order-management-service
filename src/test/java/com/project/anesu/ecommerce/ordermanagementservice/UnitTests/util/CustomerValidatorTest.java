@@ -69,8 +69,9 @@ class CustomerValidatorTest {
   void shouldThrowExceptionWhen_EmailIsNull() {
 
     // Given
+    Long customerId = 2L;
     Customer customer = new Customer();
-    customer.setId(200L);
+    customer.setId(customerId);
     customer.setFirstName("Lisa");
     customer.setLastName("Simpson");
     customer.setEmail(null);
